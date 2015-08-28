@@ -1,0 +1,31 @@
+<!doctype html>
+<html >
+  <head>
+	<meta charset="utf-8">
+	<script src="js/angular.min.js"></script>
+	<script src="js/angular-ui-router.js"></script>
+	<script src="js/main.js"></script>
+	<script src="js/route.js"></script>
+	<script src="js/directive.js"></script>
+	<script src="js/controllers/Index.js"></script>
+	
+	<!--script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script-->
+    
+  </head>
+  <body ng-app="mysite">
+	
+	<div my-header></div>	
+	
+		<div class="container"  ui-view >
+			
+			<!-- где все происходит и за что отвечает роутер -->
+		</div>
+		
+      <footer>
+        <p>&copy; </p>
+      </footer>
+   
+		
+	
+  </body>
+</html>
