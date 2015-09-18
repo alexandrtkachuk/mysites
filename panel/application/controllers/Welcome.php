@@ -19,23 +19,44 @@ class Welcome extends CI_Controller {
 	 * @see http://codeigniter.com/user_guide/general/urls.html
 	 */
 	
-
+	public $access;
 	
 	public function __construct()
 	{
 			parent::__construct();
 			
+			$this->access = false;
+			
 			$this->load->database();
 			$this->load->model('User', 'user');
+			if(!$this->login())
+			{
+				$this->enter();
+			}
+			else
+			{
+				$this->access = true;
+			}	
 	}
 	
 	public function index()
 	{
-		
+		if(!$this->access) 
+		{
+			return false;
+		}
 		
 		$this->load->view('welcome_message');
 	}
 	
+	//enter page
+	public function enter()
+	{
+		//print '111111111!!!!!!@@@@@@@@@@@@???????';
+		$this->load->view('header');
+		$this->load->view('enter_page');
+		$this->load->view('footer');
+	}
 	
 	public function logout()
 	{
@@ -43,13 +64,10 @@ class Welcome extends CI_Controller {
 		return true;
 	}
 	
-	public function login()
+	private function login()
 	{
-		
-		
 		$realm = $this->config->item('realm');
 		
-		//unset($_SERVER['PHP_AUTH_DIGEST']);
 		$data = $this->input->server('PHP_AUTH_DIGEST');
 		
 		if (empty($data)) 
@@ -61,18 +79,15 @@ class Welcome extends CI_Controller {
 			
 			
 			return false;
-			die('Текст, отправляемый в том случае, если пользователь нажал кнопку Cancel');
+			//die('Текст, отправляемый в том случае, если пользователь нажал кнопку Cancel');
 		}
 		
 		if( $this->user->login($data,$realm))
 		{
-			echo 'good';
-		}
-		else
-		{
-				echo 'err';
+			return true;
 		}
 		
+		return false;
 	}
 	
 		

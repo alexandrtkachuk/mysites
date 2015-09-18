@@ -14,6 +14,8 @@ class User extends CI_Model
 		{
 			$data = $this->http_digest_parse($result); //parse data Digest
 			
+			//var_dump($data);
+			
 			$this->db->select('id, name, pass');
 			$this->db->from('panelUsers');
 			$this->db->where('name', $data['username']);
