@@ -19,7 +19,7 @@ class Welcome extends CI_Controller {
 	 * @see http://codeigniter.com/user_guide/general/urls.html
 	 */
 	
-	public $access;
+	protected $access;
 	
 	public function __construct()
 	{
@@ -29,30 +29,23 @@ class Welcome extends CI_Controller {
 			
 			$this->load->database();
 			$this->load->model('User', 'user');
-			if(!$this->login())
-			{
-				$this->enter();
-			}
-			else
-			{
-				$this->access = true;
-			}	
+			
 	}
 	
 	public function index()
 	{
-		if(!$this->access) 
+		if(!$this->isLogin()) 
 		{
 			return false;
 		}
-		
-		$this->load->view('welcome_message');
+		$data['title'] = 'home';
+		$this->view('welcome_message',$data);
+
 	}
 	
 	//enter page
-	public function enter()
+	private function enter()
 	{
-		//print '111111111!!!!!!@@@@@@@@@@@@???????';
 		$this->load->view('header');
 		$this->load->view('enter_page');
 		$this->load->view('footer');
@@ -61,6 +54,7 @@ class Welcome extends CI_Controller {
 	public function logout()
 	{
 		header('HTTP/1.1 401 Unauthorized');
+		$this->load->view('logout_page');
 		return true;
 	}
 	
@@ -70,16 +64,13 @@ class Welcome extends CI_Controller {
 		
 		$data = $this->input->server('PHP_AUTH_DIGEST');
 		
-		if (empty($data)) 
+		if (empty($data) || !$this->user->login($data,$realm)) 
 		{
 			header('HTTP/1.1 401 Unauthorized');
 			header('WWW-Authenticate: Digest realm="'.$realm.
 			   '",qop="auth",nonce="'.uniqid().'",opaque="'.md5($realm).'"');
 			
-			
-			
 			return false;
-			//die('Текст, отправляемый в том случае, если пользователь нажал кнопку Cancel');
 		}
 		
 		if( $this->user->login($data,$realm))
@@ -90,5 +81,53 @@ class Welcome extends CI_Controller {
 		return false;
 	}
 	
+	
+	protected function isLogin()
+	{
+		if(!$this->login())
+		{
+			$this->enter();
+		}
+		else
+		{
+			return true;
+		}	
 		
+		return false;
+	}
+	
+	protected function view($page, $data)
+	{
+		$this->load->view('header',$data);
+		$this->load->view('menu');
+		$this->load->view($page);
+		$this->load->view('footer');
+	}
+	
+	public function info()
+	{
+		if(!$this->isLogin()) 
+		{
+			return false;
+		}
+		
+		
+		
+		//var_dump($_POST);
+		$data['error'] = 0; //
+		
+		if(!$this->user->addInfo('tel2', '0987509435890'))
+		{
+			$data['error'] = 2;
+		}
+		else
+		{
+			$data['error'] = 1;
+		}
+			
+		$data['title'] = 'info';
+		
+		$data['info'] = $this->user->getInfo();
+		$this->view('info_page',$data);
+	}
 }

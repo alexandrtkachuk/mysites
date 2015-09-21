@@ -509,5 +509,5 @@ $config['proxy_ips'] = '';
 |необходима при Digest авторизации
 */
 
-$config['realm'] = 'welcom';
+$config['realm'] = 'welcome';
 

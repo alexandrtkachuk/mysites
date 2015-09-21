@@ -8,7 +8,9 @@ $this->load->helper('html');
 	
 	<!-- Bootstrap core CSS -->
 	<?php echo link_tag('css/bootstrap.min.css'); ?>
+	<?php echo link_tag('css/custom.css'); ?>
 	
-	<title>vcxvxc</title>
+	<title><?php echo $title ?></title>
 	
 </head>
+<body>

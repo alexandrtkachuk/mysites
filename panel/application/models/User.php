@@ -10,8 +10,12 @@ class User extends CI_Model
                 parent::__construct();
         }
 		
-		public function login($result, $realm )
+		public function login($result, $realm)
 		{
+			if(empty($result)) 
+			{
+				return;
+			}
 			$data = $this->http_digest_parse($result); //parse data Digest
 			
 			//var_dump($data);
@@ -29,10 +33,13 @@ class User extends CI_Model
 			
 			$res  = $query->result()[0];
 			$pass = $res->pass;
-			// ãåíåğèğóåì êîğğåêòíûé îòâåò
+			// Ğ³ĞµĞ½ĞµÑ€Ğ¸Ñ€ÑƒĞµĞ¼ ĞºĞ¾Ñ€Ñ€ĞµĞºÑ‚Ğ½Ñ‹Ğ¹ Ğ¾Ñ‚Ğ²ĞµÑ‚
 			//$A1 = md5($data['username'] . ':' . $realm . ':' . 'test');
+			
 			$A2 = md5($_SERVER['REQUEST_METHOD'].':'.$data['uri']);
 			$valid_response = md5($pass.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
+			
+			
 			
 			if ($data['response'] != $valid_response)
 			{
@@ -46,10 +53,10 @@ class User extends CI_Model
 		}
 		
 		
-		// ôóíêöèÿ ğàçáîğà çàãîëîâêà http auth
+		// Ñ„ÑƒĞ½ĞºÑ†Ğ¸Ñ Ñ€Ğ°Ğ·Ğ±Ğ¾Ñ€Ğ° Ğ·Ğ°Ğ³Ğ¾Ğ»Ğ¾Ğ²ĞºĞ° http auth
 		private function http_digest_parse($txt)
 		{
-			// çàùèòà îò îòñóòñòâóşùèõ äàííûõ
+			// Ğ·Ğ°Ñ‰Ğ¸Ñ‚Ğ° Ğ¾Ñ‚ Ğ¾Ñ‚ÑÑƒÑ‚ÑÑ‚Ğ²ÑƒÑÑ‰Ğ¸Ñ… Ğ´Ğ°Ğ½Ğ½Ñ‹Ñ…
 			$needed_parts = array('nonce'=>1, 'nc'=>1, 'cnonce'=>1, 'qop'=>1, 'username'=>1, 'uri'=>1, 'response'=>1);
 			$data = array();
 			$keys = implode('|', array_keys($needed_parts));
@@ -62,5 +69,49 @@ class User extends CI_Model
 			}
 
 			return $needed_parts ? false : $data;
+		}
+		
+		public function getInfo($id = 0)
+		{
+			if($id === 0 )
+			{
+				$id = $this->id;
+			}
+			$this->db->select('var, info');
+			$this->db->from('panelUsers2Info');
+			$this->db->where('idUser', $id);
+			$query = $this->db->get();
+			
+			return $query->result();
+		}
+		
+		public function addInfo($var,$info)
+		{
+			if(!isset($var) || !isset($info))
+			{
+				return false;
+			}
+			
+			$this->db->select();
+			$this->db->from('panelUsers2Info');
+			$this->db->where('var', $var);
+			$this->db->where('idUser', $this->id);
+			$this->db->limit(1); 
+			$query = $this->db->get();
+			
+			if($query->num_rows() > 0)
+			{
+				return false;
+			}
+			
+			$data = array(
+					'idUser' => $this->id,
+					'var' => $var,
+					'info' => $info
+			);
+						
+			$this->db->insert('panelUsers2Info', $data);
+			
+			return true;
 		}
 }
