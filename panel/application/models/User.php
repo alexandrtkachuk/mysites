@@ -123,7 +123,8 @@ class User extends CI_Model
 			$this->db->where('var', $oldVar);
 			$this->db->limit(1);
 			$this->db->update('panelUsers2Info');
-			//$res =
+			
+			$res = $this->db->affected_rows();
 			//var_dump($res);
 			// to do: reselt for update
 		}

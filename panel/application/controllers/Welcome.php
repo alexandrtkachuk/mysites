@@ -150,8 +150,19 @@ class Welcome extends CI_Controller {
 	
 	public function pages()
 	{
-		$data['title'] = 'Pages';
+		if(!$this->isLogin()) 
+		{
+			return false;
+		}
 		
+		$this->load->model('Page', 'pages');
+		$data['title'] = 'Pages';
+		print $this->user->id;
+		//$this->pages->add($this->user->id,'name', 'bodyyyyyyyyy');
+		//$this->pages->edit($this->user->id,4,'nameNew', 'bodyyyyyyyyy',true);
+		$this->pages->del($this->user->id, 1);
+		$r = $this->pages->get($this->user->id);
+		var_dump($r);
 		$this->view('pages_page',$data);
 	}
 }
