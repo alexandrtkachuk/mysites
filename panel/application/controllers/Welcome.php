@@ -116,18 +116,42 @@ class Welcome extends CI_Controller {
 		//var_dump($_POST);
 		$data['error'] = 0; //
 		
-		if(!$this->user->addInfo('tel2', '0987509435890'))
+		if($this->input->post('add') === 'add')
 		{
-			$data['error'] = 2;
+		
+			if(!$this->user->addInfo(
+					$this->input->post('var'),$this->input->post('info') ))
+			{
+				$data['error'] = 2;
+			}
+			else
+			{
+				$data['error'] = 1;
+			}
 		}
-		else
+		elseif ($this->input->post('edit') == 1)
 		{
-			$data['error'] = 1;
+			$this->user->updateInfo($this->input->post('oldVar'),
+					$this->input->post('var'), 
+					$this->input->post('info'));
 		}
-			
+		elseif ($this->input->post('del') == 1)
+		{
+			$this->user->delInfo($this->input->post('oldVar'));
+		}
+		
+		
 		$data['title'] = 'info';
 		
 		$data['info'] = $this->user->getInfo();
 		$this->view('info_page',$data);
+	}
+	
+	
+	public function pages()
+	{
+		$data['title'] = 'Pages';
+		
+		$this->view('pages_page',$data);
 	}
 }

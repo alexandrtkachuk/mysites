@@ -114,4 +114,25 @@ class User extends CI_Model
 			
 			return true;
 		}
+		
+		public function updateInfo($oldVar, $var, $info)
+		{
+			$this->db->set('var', $var);
+			$this->db->set('info', $info);
+			$this->db->where('idUser', $this->id);
+			$this->db->where('var', $oldVar);
+			$this->db->limit(1);
+			$this->db->update('panelUsers2Info');
+			//$res =
+			//var_dump($res);
+			// to do: reselt for update
+		}
+		
+		public function delInfo($oldVar)
+		{
+			$this->db->where('idUser', $this->id);
+			$this->db->where('var', $oldVar);
+			$this->db->limit(1);
+			$this->db->delete('panelUsers2Info');
+		}
 }

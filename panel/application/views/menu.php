@@ -16,7 +16,7 @@ $this->load->helper('url');
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="<?php echo base_url();?>">Home</a></li>
-            <li><a href="#about">Pages</a></li>
+            <li><a href="<?php echo base_url();?>index.php/Welcome/pages">Pages</a></li>
             <li><a href="<?php echo base_url();?>index.php/Welcome/info">Info</a></li>
           </ul>
         </div><!--/.nav-collapse -->
