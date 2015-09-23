@@ -84,6 +84,11 @@ class Welcome extends CI_Controller {
 	
 	protected function isLogin()
 	{
+		if(isset($this->user->id) && $this->user->id > 0)
+		{
+			return true;
+		}
+		
 		if(!$this->login())
 		{
 			$this->enter();
@@ -147,7 +152,7 @@ class Welcome extends CI_Controller {
 		$this->view('info_page',$data);
 	}
 	
-	
+	//list pages
 	public function pages()
 	{
 		if(!$this->isLogin()) 
@@ -157,12 +162,42 @@ class Welcome extends CI_Controller {
 		
 		$this->load->model('Page', 'pages');
 		$data['title'] = 'Pages';
-		print $this->user->id;
+		//print $this->user->id;
 		//$this->pages->add($this->user->id,'name', 'bodyyyyyyyyy');
 		//$this->pages->edit($this->user->id,4,'nameNew', 'bodyyyyyyyyy',true);
-		$this->pages->del($this->user->id, 1);
-		$r = $this->pages->get($this->user->id);
-		var_dump($r);
+		//$this->pages->del($this->user->id, 1);
+		
+		$data['pages'] = $this->pages->get($this->user->id);
 		$this->view('pages_page',$data);
 	}
+	
+	public function editPage()
+	{
+		if(!$this->isLogin())
+		{
+			return false;
+		}
+		
+		$this->load->model('Page', 'pages');
+		
+		if($this->input->post('edit') == 1)
+		{
+			$data['page'] = $this->pages->get(
+					$this->user->id ,
+					 $this->input->post('id'));
+		}
+		elseif ($this->input->post('edit') == 1)
+		{
+			$this->pages->del($this->user->id, 
+					$this->input->post('id'));
+			$this->pages();
+			return true;
+		}
+		
+		$data['title'] = 'add page';
+		
+		$this->view('pages_edit_page',$data);
+	}
+	
+	
 }

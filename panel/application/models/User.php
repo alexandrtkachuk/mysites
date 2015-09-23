@@ -4,7 +4,8 @@ class User extends CI_Model
 {	
 		public $name;
 		public $id;
-
+		public $url;
+		
         public function __construct()
         {
                 parent::__construct();
@@ -20,7 +21,7 @@ class User extends CI_Model
 			
 			//var_dump($data);
 			
-			$this->db->select('id, name, pass');
+			$this->db->select('id, name, pass, url');
 			$this->db->from('panelUsers');
 			$this->db->where('name', $data['username']);
 			$this->db->limit(1); 
@@ -48,6 +49,7 @@ class User extends CI_Model
 			
 			$this->id = $res->id;
 			$this->name = $res->name;
+			$this->url = $res->url;
 			
 			return true;
 		}
