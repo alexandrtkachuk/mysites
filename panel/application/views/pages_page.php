@@ -8,7 +8,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <h1>List pages</h1>
         <hr />
         
-        
+        <form class="form-horizontal" method="POST" action="<?php echo base_url();?>index.php/Welcome/editpage">
+		  <div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+			  <button type="submit" class="btn btn-default" name="add" value='1'>add page</button>
+			</div>
+		  </div>
+		</form>
       <table class="table table-bordered">
 	  <thead>
 		<tr>

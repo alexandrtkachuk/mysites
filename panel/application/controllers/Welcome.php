@@ -162,6 +162,32 @@ class Welcome extends CI_Controller {
 		
 		$this->load->model('Page', 'pages');
 		$data['title'] = 'Pages';
+		if($this->input->post('editend') == 1)
+		{
+			//var_dump($_POST);
+			
+			$active = $this->input->post('active');
+			
+			if(isset($active))
+			{
+				$active = true;
+			}
+			if(is_numeric( $this->input->post('id')))
+			{
+				$this->pages->edit($this->user->id
+				,$this->input->post('id')
+				,$this->input->post('name') 
+				,$this->input->post('body')
+				,$active);
+			}
+			else
+			{
+				$this->pages->add($this->user->id
+				,$this->input->post('name') 
+				,$this->input->post('body')
+				,$active);
+			}	
+		}
 		//print $this->user->id;
 		//$this->pages->add($this->user->id,'name', 'bodyyyyyyyyy');
 		//$this->pages->edit($this->user->id,4,'nameNew', 'bodyyyyyyyyy',true);
@@ -180,21 +206,26 @@ class Welcome extends CI_Controller {
 		
 		$this->load->model('Page', 'pages');
 		
+		$data = array();
+		
 		if($this->input->post('edit') == 1)
 		{
 			$data['page'] = $this->pages->get(
 					$this->user->id ,
-					 $this->input->post('id'));
+					 $this->input->post('id'))[0];
+			$data['title'] = 'edit page';
 		}
-		elseif ($this->input->post('edit') == 1)
+		elseif ($this->input->post('del') == 1)
 		{
 			$this->pages->del($this->user->id, 
-					$this->input->post('id'));
+			$this->input->post('id'));
 			$this->pages();
 			return true;
 		}
-		
-		$data['title'] = 'add page';
+		elseif ($this->input->post('add') == 1)
+		{
+			$data['title'] = 'edit page';
+		}
 		
 		$this->view('pages_edit_page',$data);
 	}
