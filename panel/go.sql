@@ -22,13 +22,29 @@ posts: id, name, idUser, body, createTime, modTime
 */
 
 DROP TABLE IF EXISTS panelPosts ;
-
+/*
+page need have image
+*/
 CREATE TABLE panelPosts (
 	id INT(1) UNSIGNED  NOT NULL AUTO_INCREMENT, 
     idUser SMALLINT(1) UNSIGNED, 
 	name VARCHAR(64),
+	image VARCHAR(128),
 	body TEXT,
 	createTime DATETIME, 
 	modTime DATETIME,
 	active BOOL,
 	PRIMARY KEY (id));
+	
+/*
+uu
+*/
+
+CREATE TABLE panelFiles (
+	id INT(1) UNSIGNED  NOT NULL AUTO_INCREMENT, 
+    body MEDIUMBLOB ,
+	idUser SMALLINT(1) UNSIGNED,
+	name VARCHAR(128),
+	info VARCHAR(256),
+	PRIMARY KEY (id));
+	

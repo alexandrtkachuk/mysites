@@ -35,7 +35,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<td><?php echo $value->name ?></td>
 			<td><?php echo $value->active ?></td>
 			<td><button type="submit" class="btn btn-primary" name="edit" value ="1">Edit</button></td>
-			<td><button type="submit" class="btn btn-danger" name="del" value ="1">Del</button></td>
+			<td><button type="submit" class="btn btn-danger" name="del" value ="1"
+			onclick="return confirm('Are you really need delete it is?')" >Del</button></td>
 			</form>
 		</tr>
 		<?php endforeach; ?>
