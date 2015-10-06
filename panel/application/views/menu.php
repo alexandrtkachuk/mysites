@@ -18,6 +18,7 @@ $this->load->helper('url');
             <li class="active"><a href="<?php echo base_url();?>">Home</a></li>
             <li><a href="<?php echo base_url();?>index.php/Welcome/pages">Pages</a></li>
             <li><a href="<?php echo base_url();?>index.php/Welcome/info">Info</a></li>
+			<li><a href="<?php echo base_url();?>index.php/Welcome/images">Images</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

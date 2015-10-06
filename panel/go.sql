@@ -13,8 +13,8 @@ INSERT INTO panelUsers (name, pass, url ) VALUES ( 'me', MD5('me:welcome:test'),
 DROP TABLE IF EXISTS panelUsers2Info ;
 CREATE TABLE panelUsers2Info (
 	idUser SMALLINT(1) UNSIGNED, 
-    var VARCHAR(12),
-	info VARCHAR(128)
+    var VARCHAR(12) CHARACTER SET utf8 COLLATE utf8_bin,
+	info VARCHAR(128) CHARACTER SET utf8 COLLATE utf8_bin
 	);
 
 /*
@@ -28,7 +28,7 @@ page need have image
 CREATE TABLE panelPosts (
 	id INT(1) UNSIGNED  NOT NULL AUTO_INCREMENT, 
     idUser SMALLINT(1) UNSIGNED, 
-	name VARCHAR(64),
+	name VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_bin,
 	image VARCHAR(128),
 	body TEXT,
 	createTime DATETIME, 
@@ -39,12 +39,13 @@ CREATE TABLE panelPosts (
 /*
 uu
 */
+DROP TABLE IF EXISTS panelFiles ;
 
 CREATE TABLE panelFiles (
 	id INT(1) UNSIGNED  NOT NULL AUTO_INCREMENT, 
     body MEDIUMBLOB ,
 	idUser SMALLINT(1) UNSIGNED,
-	name VARCHAR(128),
-	info VARCHAR(256),
+	title VARCHAR(128) CHARACTER SET utf8 COLLATE utf8_bin,
+	info VARCHAR(256)  CHARACTER SET utf8 COLLATE utf8_bin,
 	PRIMARY KEY (id));
 	

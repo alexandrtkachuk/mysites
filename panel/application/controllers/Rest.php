@@ -62,25 +62,45 @@ class Rest extends CI_Controller {
 			$this->db->insert('panelFiles');
 		}
 		
+		$me  = function_exists('imagecreate');
+		var_dump($me);
 		$this->load->view('upload_test');
 	}
 	
-	public function images($id = 0)
+	public function images($id = 0 , $percent = 0 )
 	{
 		if(!is_numeric($id) && $user === 0  )
 		{
 			return;
 		}
 		
-		$this->db->select('body');
-		$this->db->from('panelFiles');
-		$this->db->where('id', $id);
-		$this->db->limit(1); 
-		$query = $this->db->get();
-		header('Content-Encoding: gzip');
 		header("Content-type: image/jpg");
-		print $query->row()->body;
-		//var_dump($query->row()->body);
+		header('Content-Encoding: gzip');
+		
+		
+		$this->load->model('Images', 'image');
+		
+		if(isset($percent) && is_numeric($percent) &&  $percent > 0 && $percent < 100 )
+		{
+			$image = gzdecode($this->image->get($id));
+			print gzencode($this->image->createMiniPic($image,$percent / 100));
+		}
+		else
+		{
+			print $this->image->get($id);
+		}
+		
 	}
+	
+	
+	public function __destruct()
+	{
+		$this->db->close();
+		parent::__destruct();
+	}
+	
+	
+	
+	
 }
 

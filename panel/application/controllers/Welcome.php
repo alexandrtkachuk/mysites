@@ -115,15 +115,12 @@ class Welcome extends CI_Controller {
 		{
 			return false;
 		}
-		
-		
-		
+
 		//var_dump($_POST);
 		$data['error'] = 0; //
 		
 		if($this->input->post('add') === 'add')
 		{
-		
 			if(!$this->user->addInfo(
 					$this->input->post('var'),$this->input->post('info') ))
 			{
@@ -188,10 +185,6 @@ class Welcome extends CI_Controller {
 				,$active);
 			}	
 		}
-		//print $this->user->id;
-		//$this->pages->add($this->user->id,'name', 'bodyyyyyyyyy');
-		//$this->pages->edit($this->user->id,4,'nameNew', 'bodyyyyyyyyy',true);
-		//$this->pages->del($this->user->id, 1);
 		
 		$data['pages'] = $this->pages->get($this->user->id);
 		$this->view('pages_page',$data);
@@ -230,5 +223,58 @@ class Welcome extends CI_Controller {
 		$this->view('pages_edit_page',$data);
 	}
 	
+	
+	public function images($params = false)
+	{
+		if(!$this->isLogin()) 
+		{
+			return false;
+		}
+		
+		$this->load->model('Images', 'image');
+		
+		$data = array();
+		
+		$data['title'] = 'images';
+		
+		if(isset($_FILES['userfile']['tmp_name'] )=== true 
+			&& is_numeric(filesize($_FILES['userfile']['tmp_name'])) )
+		{
+			$fileSize = filesize($_FILES['userfile']['tmp_name']);
+			if($fileSize < (1024 * 1024) )
+			{
+				$f=fopen($_FILES['userfile']['tmp_name'],"rb");
+				$upload=fread($f,$fileSize); // считали файл в переменную
+				fclose($f); // закрыли файл, можно опустить
+				
+				$rez = gzencode($upload, 6);
+				
+				unset($upload);
+				$this->input->post('title');
+				$this->image->set($rez,
+					$this->user->id
+					,$this->input->post('title')
+					,$this->input->post('info')
+				);
+				
+				$data['title'] = 'good add';
+			}
+			else
+			{
+				$data['title'] = 'error:big file!!!';
+			}
+		}
+		elseif ($this->input->post('del') == 1)
+		{
+			$data['title'] = 'good del';
+			$this->image->del($this->user->id, 
+			$this->input->post('id'));
+		}
+		
+		
+		$data['images'] = $this->image->get4user($this->user->id);
+		
+		$this->view('images_page',$data);
+	}
 	
 }
