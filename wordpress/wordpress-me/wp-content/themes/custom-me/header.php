@@ -36,11 +36,9 @@
 				//,'container_class' => 'nav??? navbar-nav'
 				//,'items_wrap'        => '<ul  id="%1$s" class="%2$s">%3$s</ul>'
 				//,'echo' => false
-				,'walker' => new themeslug_walker_nav_menu
+				,'walker' => new MyMenu
 				)); 
-				
-				
-				?>
+			?>
           
 		  
           <form class="navbar-form navbar-left" role="search">
