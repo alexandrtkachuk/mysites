@@ -12,7 +12,7 @@ begin
 	set @t:= HEX(FLOOR(RAND() * 25600000));
 	set @test:= 100 *RAND();
 	INSERT INTO messages ( info, idtheme, timecreate) 
-	    VALUES ( CONCAT(md5(@t),' and ' , HEX(@p), ' and test', CHAR(@test) ) ,@p  ,now() + @p );
+	    VALUES ( CONCAT(md5(@t),' and ' , HEX(@p), ' and test', CHAR(@test) ) ,@p  ,now() );
 
 end while;
 
@@ -24,10 +24,10 @@ DELIMITER ;
 
 
 CREATE TABLE IF NOT EXISTS `messages` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `info` text,
-  `idtheme` int(11) DEFAULT NULL,
-  `timecreate` int(11) DEFAULT NULL,
+  `id` MEDIUMINT UNSIGNED  NOT NULL AUTO_INCREMENT,
+  `info` VARCHAR(5118),
+  `idtheme` SMALLINT UNSIGNED  NOT NULL,
+  `timecreate` DATE NOT NULL,
   FULLTEXT(info),
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
@@ -35,6 +35,11 @@ CREATE TABLE IF NOT EXISTS `messages` (
 SELECT 'CALL FUN';
 call fun1();
 
+SELECT 'DROP FUN';
 drop procedure  IF EXISTS fun1;
+
+SELECT 'ADD index id';
+
+ALTER TABLE messages  ADD INDEX (id);
 
 SELECT 'END SCRIPT';
