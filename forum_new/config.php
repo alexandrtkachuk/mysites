@@ -9,8 +9,8 @@ define('ModelsDir', 'models');
 define('ControllersDir', 'controllers');
 
 
-define('_db_host',      'localhost');
-define('_db_user',      'test_forum');
-define('_db_pass',      'passtest');
-define('_db_name',      'db_test_forum');
+define('DB_HOST',      'localhost');
+define('DB_USER',      'test_forum');
+define('DB_PASS',      'passtest');
+define('DB_NAME',      'db_test_forum');
 
