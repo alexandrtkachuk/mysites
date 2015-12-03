@@ -1,0 +1,47 @@
+/*   
+Theme Name: tai-simpletheme 
+Description: Simple theme 
+Author: Tkachuk Alexandr
+Author URI: http://a-tkachuk.125mb.com/
+Version: 0.1
+.
+tems info and License
+Template-specific stuff
+ *
+ * Customizations just for the template; these are not necessary for anything
+ * with disabling the responsiveness.
+.
+*/
+
+
+/*
+ * Footer
+ */
+
+html,
+body {
+    height: 100%;
+}
+
+.blog-footer {
+  padding: 40px 0;
+  color: #999;
+  text-align: center;
+  background-color: #f9f9f9;
+  border-top: 1px solid #e5e5e5;
+ 
+   
+   
+}
+
+.blog-footer p:last-child {
+  margin-bottom: 0;
+}
+
+
+.wrap {
+   min-height: 90%;
+    
+}
+
+
