@@ -8,6 +8,16 @@ if (function_exists('add_theme_support')) {
 	add_theme_support('menus');
 }
 
+//create autoload
+spl_autoload_register( 'load_class' );
+
+function load_class($class)
+{
+    print "<h1>$class</h1>";
+}
+
+
+
 
 add_filter('wp_nav_menu_objects', 'css_for_nav_menu');
 
@@ -31,6 +41,8 @@ function css_for_nav_menu($items)
     return $items;
 }
 
+
+
 function getMaimMenu()
 {
     $menu = wp_nav_menu(array(
@@ -44,6 +56,8 @@ function getMaimMenu()
 	,'after'           => ''
 	,'walker' => new MyMenu
     ));
+    
+    $test = new Test();
 
     return $menu;
 }
@@ -75,5 +89,7 @@ register_sidebar( array(
 	,'before_title'  => '<h4>'
 	,'after_title'   => "</h4>"
 ) );
+
+
 
 
