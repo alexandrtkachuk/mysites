@@ -1,0 +1,24 @@
+
+<div class="wrap">
+        <h2>Theme Options</h2>
+        <form method="post" action="options.php">
+	    
+	    <?php wp_nonce_field('update-options') ?>
+
+            <p><strong>Twitter ID:</strong><br />
+                <input type="text" name="twitterid" size="45" value="%%TEMP%%" />
+	    </p>
+
+	    <p><strong>Arhive view(1 = view )</strong><br />
+                <input type="text" name="arhiveview" size="45" value="%%TEST%%" />
+	    </p>
+  
+
+            <p><input type="submit" name="Submit" value="Store Options" /></p>
+	    
+	    <input type="hidden" name="action" value="update" />
+	    <input type="hidden" name="page_options" value="twitterid, arhiveview" /> 
+	     
+        </form>
+    </div>
+

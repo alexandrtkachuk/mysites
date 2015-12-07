@@ -5,7 +5,7 @@
 
 
 #add menu admin
-
+/*
 add_action('admin_menu', 'add_global_custom_options');
 
 function add_global_custom_options()
@@ -41,6 +41,9 @@ function global_custom_options()
     </div>
 <?php
 }
+*/
+
+##################
 
 //Настройки панели администрирования
 ////Регистрация функции настроек
