@@ -33,8 +33,7 @@
 ?>
 	    
 
-	    <?php wp_nonce_field('update-options') ?> 
-	    <h1><?php _e('Elsewhere') ?></h1> 
+	    <?php wp_nonce_field('update-options') ?>  
 
 	    <p><strong>
 	    <?php _e( 'Show' ); ?> 

@@ -1,8 +1,8 @@
 <?php
 
-#require_once('app/inc/MyMenu.php');
+
 require_once(get_template_directory().'/app/main.php');
-require_once('custom_admin_menu.php');
+
 
 /* set menu this theme */
 if (function_exists('add_theme_support')) {
