@@ -9,17 +9,6 @@ if (function_exists('add_theme_support')) {
 	add_theme_support('menus');
 }
 
-add_action('admin_menu', 'add_global_custom_options');
-
-function add_global_custom_options()
-{
-    add_menu_page('Global Custom Options', 'Global Custom Options', 'manage_options', 'functions','global_custom_options'); 
-}
-
-function global_custom_options()
-{
-     myroute('yy'); 
-}
 
 
 

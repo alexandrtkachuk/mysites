@@ -9,10 +9,6 @@ function load_class($class)
     {
 	require_once(INC.'/'.$class.'.php' );
     }
-    elseif(file_exists(VIEWS.'/'.$class.'.php'))
-    { 	
-	require_once(VIEWS.'/'.$class.'.php' );	
-    } 
     else
     {
 	return false;
