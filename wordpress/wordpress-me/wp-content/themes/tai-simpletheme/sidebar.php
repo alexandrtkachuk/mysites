@@ -10,7 +10,7 @@
 <?php if ( 1 == $options['arhiveview'] ) : ?>
 
 <div class="sidebar-module">
-	    <h4><?php _e( 'Archives' ) ;?></h4>
+	    <h4><?php _e( 'Archives', 'default' ) ;?></h4>
    <ol class="list-unstyled" >
 
 <?php 
@@ -27,7 +27,7 @@
     || (isset($options['github']) && strlen($options['github']) > 5)
 ):  ?>
 <div class="sidebar-module">
- <h4><?php _e('Links') ?></h4> 	
+ <h4><?php _e('Links' , 'default') ?></h4> 	
 <div class="row social">
     <?php if(isset($options['facebook']) && strlen($options['facebook']) > 5): ?>
 	<div class="col-xs-2" >

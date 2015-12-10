@@ -27,7 +27,8 @@
     <!-- Custom styles for this template -->
     <!--link href="blog.css" rel="stylesheet" -->
     <link rel='stylesheet' id='main-style'  href="<?php echo get_template_directory_uri() ?>/css/blog.css" type='text/css'  />
-
+    
+    <?php if ( is_singular() ) wp_enqueue_script( "comment-reply" ); ?>
     
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>

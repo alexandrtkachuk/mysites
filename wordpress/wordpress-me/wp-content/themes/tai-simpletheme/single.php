@@ -41,13 +41,13 @@
 	    <ul class="pager">
 <?php
 $args = array(
-    'before'           => '<li>' . __('Pages:'),
+    'before'           => '<li>' . __('Pages:', 'default'),
     'after'            => '</li>',
     'link_before'      => '',
     'link_after'       => '',
     'next_or_number'   => 'number',
-    'nextpagelink'     => __('Next page'),
-    'previouspagelink' => __('Previous page'),
+    'nextpagelink'     => __('Next page', 'default'),
+    'previouspagelink' => __('Previous page', 'default'),
     'pagelink'         => '%',
     'echo'             => 1,
 ); 

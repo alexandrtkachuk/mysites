@@ -3,7 +3,7 @@ Theme Name: tai-simpletheme
 Description: Simple theme for blog 
 Author: Tkachuk Alexandr
 Version: 0.1
-Tags:  light, blue, responsive-layout, two-columns, right-sidebar, custom-menu
+Tags: light, blue, responsive-layout, two-columns, right-sidebar, custom-menu
 
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -26,11 +26,11 @@ body {
   text-align: center;
   background-color: #f9f9f9;
   border-top: 1px solid #e5e5e5;
- 
-   
-   
 }
 
+.sticky{}
+.gallery-caption{}
+.bypostauthor{}
 .blog-footer p:last-child {
   margin-bottom: 0;
 }

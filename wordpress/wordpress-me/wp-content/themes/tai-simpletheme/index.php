@@ -26,6 +26,7 @@
 				
 				<!--?php the_excerpt(); ?-->
 				<?php the_content( null ); ?>
+				<p><?php the_tags(); ?></p>
 				    
 			</div>
 		<?php endwhile; ?>
