@@ -40,11 +40,12 @@
 	    <ul class="pager">
 	      <li> <?php   previous_posts_link(translate('Back')); ?></li>
 	      <li><?php  next_posts_link(translate('Next')); ?> </li>
-            </ul>
+	    </ul>
+
+
           </nav>
 
         </div><!-- /.blog-main -->
 
-	
 
     <?php get_footer(); ?>

@@ -19,7 +19,7 @@ class ThemeSettings
 
     public function add_global_custom_options()
     {
-	add_menu_page('Custom theme settings', 
+	add_theme_page('Custom theme settings', 
 	    'Custom theme settings', 
 	    'manage_options', 
 	    'functions',array($this,'global_custom_options')); 

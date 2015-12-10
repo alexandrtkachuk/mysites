@@ -33,15 +33,29 @@
 
 
           
+	<?php comments_template(); ?> 
 
-          
 
-          <nav>
+
+	  <nav>
 	    <ul class="pager">
-	      <li> <?php   previous_posts_link(translate('Back')); ?></li>
-	      <li><?php  next_posts_link(translate('Next')); ?> </li>
-            </ul>
-          </nav>
+<?php
+$args = array(
+    'before'           => '<li>' . __('Pages:'),
+    'after'            => '</li>',
+    'link_before'      => '',
+    'link_after'       => '',
+    'next_or_number'   => 'number',
+    'nextpagelink'     => __('Next page'),
+    'previouspagelink' => __('Previous page'),
+    'pagelink'         => '%',
+    'echo'             => 1,
+); 
+
+wp_link_pages( $args );
+?>
+		    </ul>
+	  </nav>
 
         </div><!-- /.blog-main -->
 

@@ -3,6 +3,7 @@
 
 require_once(get_template_directory().'/app/main.php');
 
+add_theme_support( 'custom-menu' );
 
 /* set menu this theme */
 if (function_exists('add_theme_support')) {
@@ -51,33 +52,18 @@ function getMaimMenu()
     return $menu;
 }
 
-
-
-
-register_sidebar( array(
-    'id'          => 'footer-sidebar',
-    'name'        => __( 'footer-sidebar'),
-    'description' => __( 'This sidebar is located above the age logo.')
-	,'class'         => 'dddd'
-	,'before_widget' => '<div id="%1$s" class="sidebar-module %2$s">'
-	,'after_widget'  => '</div>'
-	,'before_title'  => '<h4>'
-	,'after_title'   => "</h4>\n"
-	,'classname'         => 'nav-list'
-	,'echo' => false
-) );
-
-
-register_sidebar( array(
+$args = array(
     'id'          => 'about-sidebar',
     'name'        => __( 'about-sidebar (for text)' ),
     'description' => __( 'This sidebar is located above the age logo.' )
-	,'class'         => 'dddd'
-	,'before_widget' => '<div id="%1$s" class="sidebar-module sidebar-module-inset %2$s">'
-	,'after_widget'  => '</div>'
-	,'before_title'  => '<h4>'
-	,'after_title'   => "</h4>"
-) );
+    ,'class'         => 'dddd'
+    ,'before_widget' => '<div id="%1$s" class="sidebar-module sidebar-module-inset %2$s">'
+    ,'after_widget'  => '</div>'
+    ,'before_title'  => '<h4>'
+    ,'after_title'   => "</h4>"
+);
+
+register_sidebar($args );
 
 
 
