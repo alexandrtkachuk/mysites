@@ -23,6 +23,7 @@ use warnings;
 use utf8;
 
 use Data::Dumper;
+use Didgits;
 
 my (@DIDGITS);
 
@@ -129,11 +130,80 @@ sub endstep
 	elsif($st->{'bull'} == 4)
 	{
 		#goooood
-		print $startdid, "\n";
-		return $startdid;
+		print $did, "\n";
+		return $did;
 	}
 	
 	return undef;
+}
+
+sub nextValue
+{
+	my ($dids) = @_ ;
+
+	my ($value, @arr);
+	
+	#еще нужно отработать ситуацию где 4коровы или в 8ми разных цифр по 2 коровы
+
+	#если есть цифры которые были не задейcтвованы то задействовать их
+	
+	for(0..9)
+	{
+		my $temp = $dids->{$_};
+		
+		my $count = @$temp;
+
+		push @arr, "$_" if(!$count);
+
+		$count = @arr;
+
+		last if ($count == 4);
+	}
+	
+	my $count = @arr;
+	
+	for my $i ($count + 1 .. 4)
+	{	
+		for my $j(0..9)
+		{	
+			my ($bool) = 0;
+			
+			my $tempArr = $dids->{$j};
+			
+			for(@$tempArr)
+			{
+				if(!$_->{'cow'})
+				{
+					$bool = 1;
+					last;
+				}
+				elsif($_->{'bull'})
+				{
+					last unless("$j" ~~ @arr);
+				}
+				elsif($i == $_->{'position'})	
+				{
+					$bool = 1;
+					last;
+				}
+			}
+
+			next if($bool);
+
+			next if("$j" ~~ @arr);
+
+			push @arr, "$j";
+
+			last
+		}
+	}
+	
+	for(@arr)
+	{
+		$value .= "$_";
+	}
+
+	return $value;
 }
 
 sub game
@@ -144,7 +214,7 @@ sub game
 	
 	my ($startdid, $second, $thirty, $fourty);
 
-	my (%did) = ('1' => -1, '2' => -1 , '3' => -1, '4' => -1);
+	my ($dids) = Didgits->new();	
 	
 	($startdid) = $DIDGITS[int(rand(5040))];
 
@@ -152,17 +222,22 @@ sub game
 
 	my $st1 = cow($origin, $startdid);
 	
-	mlog($origin, $startdid, $st1, 1 );
+	$dids->setValue($startdid, $st1->{'cow'}, $st1->{'bull'});
+
+	mlog($origin, $startdid, $st1, 1);
+	
 
 	#step 2
 	# origin = 3748 start=7986	
 	
 
-	my ($result) = endstep(\@indidgit, \@none, $st, $startdid);
+	my ($result) = endstep(\@indidgit, \@none, $st1, $startdid);
+	
+		
 
 	if($result)
 	{
-		return $result; 
+		return ($result, 1); 
 	}
 	else
 	{
@@ -170,7 +245,7 @@ sub game
 		
 		my (@temp);
 
-		for(1..4-$st1->{'cow'})
+		for(1..$st1->{'cow'})
 		{
 			#pop @didgits;
 			push @temp, $didgits[$_ - 1];
@@ -201,41 +276,67 @@ sub game
 
 	mlog($origin, $second, $st2, 2);
 
-	#step 3
+	$dids->setValue($second, $st2->{'cow'}, $st2->{'bull'});
+	($result) = endstep(\@indidgit, \@none, $st2, $second);
+	#print Dumper $dids;
+	#step other
 	
-	if(!$st2->{'cow'})
-	{
-		my (@temp) = split(//,$second);
+	my ($step) = 2;	
 
-		for(@temp)
+	if($result)
+	{
+		return ($result, 2); 
+	}
+
+	for(1..2)
+	{
+		$step++;
+		
+		my ($value) = nextValue($dids);
+
+		my $st3 = cow($origin, $value);
+
+		$dids->setValue($value, $st3->{'cow'}, $st2->{'bull'});
+		
+		mlog($origin, $value, $st3, $step);
+
+		($result) = endstep(\@indidgit, \@none, $st3, $value);
+
+		if($result)
 		{
-			push @none, $_;
-		}
-	}
-	elsif($st2->{'cow'} == 4)
-	{
-		 my (@temp)	= split(//,$second);
+			return ($result, $step); 
+		}	
 
-		for(@temp)
-		{
-			push @indidgit, $_;
-		}
 	}
-	elsif($st2->{'bull'} == 4)
-	{
-		#goooood
-		print $second, "\n";
-		return $second;
-	}
-	elsif($st1->{'bull'})
-	{
-	
-	}
-
-
-	
+			
 }
 
+sub test
+{
+	my $d = Didgits->new();
+	
+	my (%temp) = ('rr'=>2, 'ee' => 18);
+	my (%temp2) = ('rr1'=>23, 'ee1' => 48);
+
+	push $d->{'1'}, {%temp};
+	push $d->{'1'}, {%temp2};
+	
+
+	#print Dumper $d;
+	
+	my $tarr = $d->{'1'};
+	
+	my $count = @$tarr;
+
+	print "count = $count\n";
+
+	for(@$tarr)
+	{
+		print Dumper $_;
+		print $_->{'rr'};
+	}	
+
+}
 
 sub main
 {
@@ -247,16 +348,12 @@ sub main
 	{
 		my $r = int(rand($count));
 		
-		#game($DIDGITS[$r]);
+		game($DIDGITS[$r]);
 
 		#print $DIDGITS[$r], "\n";	
 	}
-
-	my (@temp) = (1,2);
 	
-	test(\@temp);
-
-	print Dumper @temp;
+	#test();	
 }
 
 main();
