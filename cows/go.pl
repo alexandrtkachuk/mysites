@@ -146,8 +146,9 @@ sub nextValue
 	#еще нужно отработать ситуацию где 4коровы или в 8ми разных цифр по 2 коровы
 
 	#если есть цифры которые были не задейcтвованы то задействовать их
-	
-	for(0..9)
+	my (@araysDidgits) =  randomArr();
+
+	for(@araysDidgits)
 	{
 		my $temp = $dids->{$_};
 		
@@ -164,12 +165,17 @@ sub nextValue
 	
 	for my $i ($count + 1 .. 4)
 	{	
-		for my $j(0..9)
+		my ($bull) = (0);
+		
+		#вынисти отдельной функцией	
+		for my $j(@araysDidgits)
 		{	
-			my ($bool) = 0;
+			my ($bool, $notbull, $isbull, $isposition) = (0, 0, 0, 0);
 			
 			my $tempArr = $dids->{$j};
 			
+			#если цифра была в комбинации хоть раз где небыло быка то она не бык!
+				
 			for(@$tempArr)
 			{
 				if(!$_->{'cow'})
@@ -177,24 +183,37 @@ sub nextValue
 					$bool = 1;
 					last;
 				}
-				elsif($_->{'bull'})
-				{
-					last unless("$j" ~~ @arr);
-				}
-				elsif($i == $_->{'position'})	
-				{
-					$bool = 1;
-					last;
-				}
+
+				last if (4 == $_->{'cow'});
+
+				$notbull = 1 if(!$_->{'bull'});
+
+				$isbull = 1 if($_->{'bull'});
+
+				$isposition = 1 if($i == $_->{'position'});
 			}
+
+			#print "pos: $isposition " . "bull " .  $isbull ," j:$j" ,"\n";	
 
 			next if($bool);
 
 			next if("$j" ~~ @arr);
 
+			if ($isposition && $notbull )
+			{
+				next;
+			}
+			elsif($isposition && $bull >= $dids->{'maxbulls'})
+			{
+				next;
+			}
+			
+			$bull++ if ($isposition && $isbull);
+			
+			
 			push @arr, "$j";
-
-			last
+			
+			last;	
 		}
 	}
 	
@@ -217,7 +236,9 @@ sub game
 	my ($dids) = Didgits->new();	
 	
 	($startdid) = $DIDGITS[int(rand(5040))];
-
+	
+	$startdid =5241;
+	
 	#step 1 
 
 	my $st1 = cow($origin, $startdid);
@@ -235,72 +256,28 @@ sub game
 	
 		
 
+	#step other
+	
+	my ($step) = 1;	
+
 	if($result)
 	{
 		return ($result, 1); 
 	}
-	else
-	{
-		my (@didgits) = split(//,$startdid);
-		
-		my (@temp);
 
-		for(1..$st1->{'cow'})
-		{
-			#pop @didgits;
-			push @temp, $didgits[$_ - 1];
-		}
-		
-		for(0..9)
-		{
-			next if( "$_" ~~ @didgits);
-			
-			push @temp, "$_";
-			
-			my $count = @temp;
-
-			last if (4 == $count);
-			
-		}
-		
-		$second = "";
-
-		for(1..4)
-		{
-			$second .= $temp[4-$_];
-		}
-
-	}
-	
-	my $st2 = cow($origin, $second);
-
-	mlog($origin, $second, $st2, 2);
-
-	$dids->setValue($second, $st2->{'cow'}, $st2->{'bull'});
-	($result) = endstep(\@indidgit, \@none, $st2, $second);
-	#print Dumper $dids;
-	#step other
-	
-	my ($step) = 2;	
-
-	if($result)
-	{
-		return ($result, 2); 
-	}
-
-	for(1..2)
+	for(1..10)
 	{
 		$step++;
 		
 		my ($value) = nextValue($dids);
 
-		my $st3 = cow($origin, $value);
+		my $resultStep = cow($origin, $value);
 
-		$dids->setValue($value, $st3->{'cow'}, $st2->{'bull'});
+		$dids->setValue($value, $resultStep->{'cow'}, $resultStep->{'bull'});
 		
-		mlog($origin, $value, $st3, $step);
+		mlog($origin, $value, $resultStep, $step);
 
-		($result) = endstep(\@indidgit, \@none, $st3, $value);
+		($result) = endstep(\@indidgit, \@none, $resultStep, $value);
 
 		if($result)
 		{
@@ -308,7 +285,33 @@ sub game
 		}	
 
 	}
-			
+	
+	#print Dumper $dids;	
+}
+
+sub randomArr
+{
+	my (@arr) = @_;
+	
+	my (@newarr);
+
+	
+	
+	while(1)
+	{
+		my $i = int(rand(10));
+
+		unless($i ~~ @newarr)
+		{
+			push @newarr, $i;	
+		}
+		
+		my $count = @newarr;
+
+		last if $count > 9;
+	}
+
+	return (@newarr);
 }
 
 sub test
@@ -347,11 +350,13 @@ sub main
 	for	(0..0)
 	{
 		my $r = int(rand($count));
-		
-		game($DIDGITS[$r]);
+		#origin =6845 start=5241
+		game('6845');	
+		#game($DIDGITS[$r]);
 
 		#print $DIDGITS[$r], "\n";	
 	}
+	
 	
 	#test();	
 }

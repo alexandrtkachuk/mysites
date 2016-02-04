@@ -37,7 +37,9 @@ sub new
 			'7' => [],
 			'8' => [],
 			'9' => []
-			#,'none' => []
+			,'none' => []
+			,'maxbulls' => 0
+			,'maxcows' => 0 
 		},
 		$class);
 }
@@ -62,8 +64,14 @@ sub setValue
 
 		$position++;
 	}
-	
+
+	$self->{'maxcows'} = $cow if ($self->{'maxcows'} < $cow);
+
+	$self->{'maxbulls'} = $bull if ($self->{'maxbulls'} < $bull);
 }
+
+
+
 
 
 1;
