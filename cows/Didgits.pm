@@ -39,7 +39,11 @@ sub new
 			'9' => []
 			,'none' => []
 			,'maxbulls' => 0
-			,'maxcows' => 0 
+			,'maxcows' => 0
+		    ,'combs' => []
+			,'step' => 0
+			,'cow1step' => 0
+			,'cow2step' => 0
 		},
 		$class);
 }
@@ -47,7 +51,15 @@ sub new
 sub setValue
 {
 	my ($self, $value, $cow, $bull) = @_;
+	
+	$self->{'step'}++;
 
+	$self->{'cow1step'} = $cow if($self->{'step'} == 1);
+	$self->{'cow2step'} = $cow if($self->{'step'} == 2);
+	
+	
+	push $self->{'combs'}, $value;
+	
 	my (@temp) = split(//,$value);
 	
 	my ($position) = 1;

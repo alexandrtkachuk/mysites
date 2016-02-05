@@ -25,152 +25,32 @@ use utf8;
 use Data::Dumper;
 use Didgits;
 
-my (@DIDGITS);
+our (@DIDGITS);
 
-sub bustCustumCharactersRecursion
+our ($DEBUG) = 1;
+
+#1. определить какие именно эти 4 числа.
+#2. при этом по возможности одну и туже цифру не ставить в одну и туже позицию.
+
+require 'tools.inc';
+
+sub getDidgits
 {
-	my ($arr, $word, $count) = @_;
+	my ($dids, @arr) = @_;
 
-	$count--;
-
-	for(@$arr)
-	{
-		if($count)
-		{
-			bustCustumCharactersRecursion($arr, $word . $_, $count);
-		}
-		else
-		{
-			#print $word.$_, "\n";
-			createArr($word.$_);
-		}
-	}
-}
-
-sub createArr
-{
-	my ($word)= @_;
+	my $count = @arr;	
 	
-	my @arr=split(//,$word);
+	my ($bull) = (0);
 	
-	for my $i (@arr)
-	{
-		my ($count) = 0;
-		for my $j (@arr)
-		{
-			if($i eq $j)
-			{
-				$count++;
-			}
-		}
-		if ($count > 1) {return 0;}
-	}
-	
-	#print $word, "\n";
-	push @DIDGITS, $word;
-}
-
-sub cow
-{
-	my ($origin, $test) = @_;
-
-	my @origin = split(//,$origin);
-
-	my @test = split(//,$test);
-	
-	my (%cows) = ('cow' => 0, 'bull' => 0);
-	
-	for (@test)
-	{
-		$cows{'cow'}++ if ($_ ~~ @origin);
-	}	
-
-	for(0..3)
-	{
-		$cows{'bull'}++ if($origin[$_] eq $test[$_] );
-	}
-
-	return \%cows;
-}
-
-sub mlog
-{
-	my ($origin, $test, $cow , $step) = @_;
-	
-	print "step ", $step, "\n";
-	print "origin =", $origin, " start=", $test, "\n";
-
-	print "cow:" , $cow->{'cow'}, " bull:" ,  $cow->{'bull'}, "\n";
-}
-
-
-sub endstep
-{
-	my ($none, $indidgit, $st, $did) =@_ ;
-
-	if(!$st->{'cow'})
-	{
-		my (@temp) = split(//,$did);
-
-		for(@temp)
-		{
-			push @$none, "$_";
-		}
-	}
-	elsif($st->{'cow'} == 4)
-	{
-		my (@temp)	= split(//,$did);
-		
-		for(@temp)
-		{
-			push @$indidgit, "$_";
-		}
-
-	}
-	elsif($st->{'bull'} == 4)
-	{
-		#goooood
-		print $did, "\n";
-		return $did;
-	}
-	
-	return undef;
-}
-
-sub nextValue
-{
-	my ($dids) = @_ ;
-
-	my ($value, @arr);
-	
-	#еще нужно отработать ситуацию где 4коровы или в 8ми разных цифр по 2 коровы
-
-	#если есть цифры которые были не задейcтвованы то задействовать их
 	my (@araysDidgits) =  randomArr();
 
-	for(@araysDidgits)
-	{
-		my $temp = $dids->{$_};
-		
-		my $count = @$temp;
-
-		push @arr, "$_" if(!$count);
-
-		$count = @arr;
-
-		last if ($count == 4);
-	}
-	
-	my $count = @arr;
-	
 	for my $i ($count + 1 .. 4)
-	{	
-		my ($bull) = (0);
+	{			
 		
 		#вынисти отдельной функцией	
-		for my $j(@araysDidgits)
+		for my $j (@araysDidgits)
 		{	
-			my ($bool, $notbull, $isbull, $isposition) = (0, 0, 0, 0);
+			my ($bool, $notbull, $isbull, $isposition, $maxcows) = (0, 0, 0, 0, 0);
 			
 			my $tempArr = $dids->{$j};
 			
@@ -182,46 +62,108 @@ sub nextValue
 				{
 					$bool = 1;
 					last;
-				}
-
-				last if (4 == $_->{'cow'});
-
+				}	
+				
 				$notbull = 1 if(!$_->{'bull'});
 
 				$isbull = 1 if($_->{'bull'});
 
 				$isposition = 1 if($i == $_->{'position'});
+
+				if (4 == $_->{'cow'})
+				{
+					$maxcows = 1;
+					last;
+				}
+
 			}
 
-			#print "pos: $isposition " . "bull " .  $isbull ," j:$j" ,"\n";	
-
+				
+			#print "pos: $isposition " . "isbull " .  $isbull ," j:$j" , " i: $i", " false : $bool \n";
+			
 			next if($bool);
+
+			next if($dids->{'maxcows'} == 4 && !$maxcows);
 
 			next if("$j" ~~ @arr);
 
-			if ($isposition && $notbull )
+			if ($isposition && !$isbull  )
 			{
 				next;
 			}
-			elsif($isposition && $bull >= $dids->{'maxbulls'})
-			{
-				next;
-			}
-			
+						
 			$bull++ if ($isposition && $isbull);
 			
 			
 			push @arr, "$j";
+
+			#print "pos: $isposition " . "bull " .  $isbull ," j:$j" , "bulls: $bull","\n";
 			
 			last;	
 		}
 	}
-	
-	for(@arr)
-	{
-		$value .= "$_";
-	}
 
+	return (@arr);
+}
+
+sub nextValue
+{
+	my ($dids) = @_ ;
+
+	my ($value, @arr);
+	
+	#еще нужно отработать ситуацию где 4коровы или в 8ми разных цифр по 2 коровы
+
+	#если есть цифры которые были не задейcтвованы то задействовать их
+	
+	if($dids->{'maxcows'} != 4 && ($dids->{'cow1step'}+$dids->{'cow2step'} < 4) )
+	{
+		my (@araysDidgits) =  randomArr();
+
+		for(@araysDidgits)
+		{
+			my $temp = $dids->{$_};
+
+			my $count = @$temp;
+
+			push @arr, "$_" if(!$count);
+
+			$count = @arr;
+
+			last if ($count == 4);
+		}
+		
+	}
+	
+	my $combs =	$dids->{'combs'};
+
+	while(1)
+	{
+		(@arr) = getDidgits($dids, @arr);
+		
+		my $count = @arr;
+
+		for(@arr)
+		{
+			$value .= "$_";
+		}
+
+		last if(($count == 4) && !inArray($value, $combs));
+		
+		$value = "";
+
+		#print Dumper(@arr), "\n";
+
+		@arr = ();
+
+		#sleep(1);
+
+		#print Dumper($dids);
+
+		#die();
+	}	
+		
+	
 	return $value;
 }
 
@@ -237,7 +179,7 @@ sub game
 	
 	($startdid) = $DIDGITS[int(rand(5040))];
 	
-	$startdid =5241;
+	#$startdid =5241;
 	
 	#step 1 
 
@@ -265,7 +207,7 @@ sub game
 		return ($result, 1); 
 	}
 
-	for(1..10)
+	for(1..20)
 	{
 		$step++;
 		
@@ -286,79 +228,52 @@ sub game
 
 	}
 	
-	#print Dumper $dids;	
-}
-
-sub randomArr
-{
-	my (@arr) = @_;
-	
-	my (@newarr);
-
-	
-	
-	while(1)
-	{
-		my $i = int(rand(10));
-
-		unless($i ~~ @newarr)
-		{
-			push @newarr, $i;	
-		}
-		
-		my $count = @newarr;
-
-		last if $count > 9;
-	}
-
-	return (@newarr);
-}
-
-sub test
-{
-	my $d = Didgits->new();
-	
-	my (%temp) = ('rr'=>2, 'ee' => 18);
-	my (%temp2) = ('rr1'=>23, 'ee1' => 48);
-
-	push $d->{'1'}, {%temp};
-	push $d->{'1'}, {%temp2};
-	
-
-	#print Dumper $d;
-	
-	my $tarr = $d->{'1'};
-	
-	my $count = @$tarr;
-
-	print "count = $count\n";
-
-	for(@$tarr)
-	{
-		print Dumper $_;
-		print $_->{'rr'};
-	}	
-
+	return 0;	
 }
 
 sub main
 {
-	bustCustumCharactersRecursion([1,2,3,4,5,6,7,8,9,0], '', 4 );
+	bustCustumCharactersRecursion([1,2,3,4,5,6,7,8,9,0], '', 4 );	
 
-	my $count = @DIDGITS;
+	my $count = @DIDGITS;	
 	
+	my (@statistic);
+	#statistics
+
 	for	(0..0)
 	{
 		my $r = int(rand($count));
 		#origin =6845 start=5241
-		game('6845');	
-		#game($DIDGITS[$r]);
+		#game('6845');	
+		#print $DIDGITS[$r], "\n";
 
-		#print $DIDGITS[$r], "\n";	
+        my ($result, $step) = game($DIDGITS[$r]);
+		
+		if($result)
+		{
+			#print $result ,' - ', $step ,"\n";
+
+			push @statistic, $step;
+		}
+		else
+		{
+			#print "none \n";
+		}
+	}	
+
+
+	my ($sum) = 0;
+
+	for (@statistic)
+	{
+		$sum += $_;
 	}
 	
-	
-	#test();	
+	$count = @statistic;
+
+	print "statistic:" , $sum/$count, "\n"; 
+
+
 }
 
 main();
