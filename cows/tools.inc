@@ -1,4 +1,87 @@
 
+sub getFourValues
+{
+	my ($zero, $one, $two, $three, $four, $five, $six, $seven, $eight) = randomArr();
+	
+	my (@values) = 
+		("$one$two$three$four", 
+		"$four$five$six$seven", 
+		"$three$four$eight$zero", 
+		"$six$zero$three$four");
+	
+	return (@values);
+}
+
+sub perhapsAll
+{
+    my ($result, $values) = @_;
+
+    my (@retArr);
+
+    my $count = @$values;
+
+    for my $x (@DIDGITS)
+    {
+	my ($flag) = 0;
+
+	for my $i (0..$count - 1)
+	{
+	    my $st = cow($x, $$values[$i]);
+
+	    if(
+		!($st->{'cow'} eq $$result[$i]->{'cow'}) ||
+		!($st->{'bull'} eq $$result[$i]->{'bull'})
+	    )
+	    {
+		$flag = 1;
+		last;
+	    }
+	}
+
+	if (!$flag)
+	{     
+	    push @retArr, $x;
+	}  
+    }
+
+    return (@retArr);
+}
+
+sub perhapsMin
+{
+    my ($result, $values, @minDidgits) = @_;
+
+    my (@retArr);
+
+    my $count = @$values;
+
+    for my $x (@minDidgits)
+    {
+	my ($flag) = 0;
+
+	for my $i (0..$count - 1)
+	{
+	    my $st = cow($x, $$values[$i]);
+
+	    if(
+		!($st->{'cow'} eq $$result[$i]->{'cow'}) ||
+		!($st->{'bull'} eq $$result[$i]->{'bull'})
+	    )
+	    {
+		$flag = 1;
+		last;
+	    }
+	}
+
+	if (!$flag)
+	{     
+	    push @retArr, $x;
+	}  
+    }
+
+    return (@retArr);
+}
+
 sub createArr
 {
 	my ($word)= @_;
