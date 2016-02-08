@@ -6,7 +6,8 @@
 #        USAGE: ./go.pl  
 #
 #  DESCRIPTION: 
-#
+#COWS - все совпавшие числа включая быков
+#BULL - точное совпадение
 #1. определить какие именно эти 4 числа.
 #2. при этом по возможности одну и туже цифру не ставить в одну и туже позицию.
 #
@@ -237,6 +238,61 @@ sub game
 	return 0;	
 }
 
+    
+sub perhaps
+{
+    my ($result, $values, @retArr) = @_;
+
+    my $count = @$values;
+    
+    my $amount = 0;
+
+    for my $x (@DIDGITS)
+    {
+        my ($flag) = 0;
+
+        for my $i (0..$count - 1)
+        {
+            my $st = cow($x, $$values[$i]);
+
+            if(
+                !($st->{'cow'} eq $$result[$i]->{'cow'}) ||
+                !($st->{'bull'} eq $$result[$i]->{'bull'})
+            )
+            {
+                $flag = 1;
+                last;
+            }
+        }
+        
+        if (!$flag)
+        {     
+            push @retArr, $x;
+        }  
+    }
+    
+    return (@retArr);
+}
+
+sub game2
+{
+    my ($origin) = @_;
+    
+    my (@values) = ('1234', '4567', '3480', '6043');
+    
+    my (@result);
+    
+    for (@values)
+    {
+        my $st = cow($origin, $_);
+
+        push @result, $st;
+    }
+    
+    perhaps(\@result, \@values);
+    
+}
+
 sub main
 {
 	bustCustumCharactersRecursion([1,2,3,4,5,6,7,8,9,0], '', 4 );	
@@ -245,40 +301,47 @@ sub main
 	
 	my (@statistic);
 	#statistics
+    
+    #game2('8956');
+    
+    perhaps(
+        [ {'cow'=> 1, 'bull' => 0}, {'cow'=> 0, 'bull' => 0}, {'cow'=> 2, 'bull' => 1}, {'cow'=> 3, 'bull' => 1}]
+        , ['9612', '1025', '4786', '4398'] );
 
-	for	(0..0)
-	{
-		my $r = int(rand($count));
-		#origin =6845 start=5241
-		#game('6845');	
-		#print $DIDGITS[$r], "\n";
+    
+	for	(1..0)
+    {
+        my $r = int(rand($count));
+        #origin =6845 start=5241
+        #game('6845');	
+        #print $DIDGITS[$r], "\n";
 
         my ($result, $step) = game($DIDGITS[$r]);
-		
-		if($result)
-		{
-			#print $result ,' - ', $step ,"\n";
 
-			push @statistic, $step;
-		}
-		else
-		{
-			#print "none \n";
-		}
-	}	
+        if($result)
+        {
+            #print $result ,' - ', $step ,"\n";
 
+            push @statistic, $step;
+        }
+        else
+        {
+            #print "none \n";
+        }
+    }	
 
-	my ($sum) = 0;
+    my ($sum) = 0;
 
-	for (@statistic)
-	{
-		$sum += $_;
-	}
-	
-	$count = @statistic;
+    for (@statistic)
+    {
+        $sum += $_;
+    }
 
-	print "statistic:" , $sum/$count, "\n"; 
-
+    $count = @statistic;
+    if($count)
+    {
+        print "statistic:" , $sum/$count, "\n"; 
+    }
 
 }
 
