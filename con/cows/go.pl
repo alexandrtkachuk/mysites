@@ -141,7 +141,7 @@ sub main
 	my ($five, $min, $max) = (0,0,0);
 	my ($maximumSt, $nogood) = (0,0); # $maximumSt - подряд печальки
 
-	for	(0..20)
+	for	(0..20000)
     {
         my $r = int(rand($count));
 
@@ -156,7 +156,7 @@ sub main
 		
         if($result)
         {
-			print $result ,' - ', $step ,"\n";
+			#print $result ,' - ', $step ,"\n";
 
 			$five++ if (5 == $step);
 			$min++ if (5 > $step);
