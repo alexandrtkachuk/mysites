@@ -163,7 +163,7 @@ sub main
 
 	my ($st, $stepNotWin) = (0,0);	
 
-	for (1..10000000)
+	for (1..10000)
 	{
 		my ($didgit) = int(rand(2));
 		
@@ -231,6 +231,6 @@ sub main
 	print "countOne: $countOne\n";
 }
 
-	main();
+main();
 
 

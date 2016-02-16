@@ -239,8 +239,80 @@ sub main
 
 }
 
+my ($USD, $RUR) = (27, 0.3);
+
+
+sub getRate
+{
+	my ($code, $min) = @_;
+	
+	
+		
+	my (@usd) = (0.1, 0.2, 1, 3, 5, 10, 20, 50, 100); # code = 1
+	my (@rub) = (1, 5, 50, 150, 250, 500, 1000, 2500, 5000); #code = 2
+	my (@grn) = (0.25, 1, 20, 60, 100, 200, 400, 1000, 2000 );# code = 3
+
+	my (@full) = (@grn);
+
+	if ($min )
+	{
+		if ( 1 == $code)
+		{
+			$min = $min * $USD;
+		}
+		elsif(2 == $code)
+		{
+			$min = $min * $RUR;
+		}
+	}
+
+	
+	
+	for (@usd)
+	{
+		push @full, $USD * $_; 
+	}	
+
+	for (@rub)
+	{
+		push @full, $RUR * $_;
+	}
+	
+	my ($n, $min) = (0, 0);
+
+	(@full) = sort { $a <=> $b } @full;
+	
+	my $count = @full;
+	
+	for my $step (0..$count)
+	{	
+		my ($minInStep) = 0;
+		my $R = $min * 1.5;
+		for (@full)
+		{
+			if($_ * 1.5  >= $min+$_)
+			{
+				$minInStep = $_;
+				last;
+			}
+		}
+	
+		print $step, ") ", $minInStep, "\tmin=", $min,"\twin: ",$minInStep * 1.5 ,"\n";
+
+		$min += $minInStep;		
+	}
+	
+	
+
+	
+	
+
+}
+
 my $time = time;
 
-main();
+#main();
+
+getRate();
 
 print "time:", time - $time, "\n";
